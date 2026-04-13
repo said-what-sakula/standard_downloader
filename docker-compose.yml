@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  # ── FastAPI 后端（含 Playwright + Chromium）────────────────────────────────────
+  app:
+    build: .
+    image: standard-downloader:latest
+    container_name: standard-downloader-app
+    network_mode: host          # 共享宿主机网络：直连宿主机 MySQL（127.0.0.1 可用）
+    volumes:
+      - ./config.json:/app/config.json:ro   # 配置文件（只读挂载）
+      - ./logs:/app/logs                     # 日志持久化
+      - ./download:/app/download             # 下载文件持久化
+    environment:
+      - TZ=Asia/Shanghai
+      - CORS_ORIGINS=*
+    restart: unless-stopped
+
+  # ── Nginx（前端静态文件 + 反代 API）──────────────────────────────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: standard-downloader-nginx
+    network_mode: host          # 共享宿主机网络：直接监听 80 端口，反代到 127.0.0.1:8000
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - app
+    restart: unless-stopped

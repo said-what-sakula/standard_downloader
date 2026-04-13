@@ -1,0 +1,23 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "log_dir": "logs"
+  },
+  "chromium_path": "",
+  "storage": {
+    "upload_url": "http://your-oss-server/file/upload",
+    "save_path": "https://your-oss-domain/",
+    "bucket_name": "your-bucket",
+    "bucket_path": "standard"
+  },
+  "database": {
+    "host": "192.168.x.x",
+    "port": 3306,
+    "db": "standard_crawler",
+    "user": "root",
+    "password": "your_password",
+    "pool_size": 10,
+    "pool_recycle": 3600
+  }
+}
